@@ -1,23 +1,25 @@
 let canvas = document.getElementById('areajuego');
 let ctx = canvas.getContext('2d');
+const ALTURASUELO = 40;
+const ALTURAPERSONAJE = 60;
+const ANCHOPERSONAJE = 40;
 function iniciarJuego() {
     dibujarsuelo();
     dibujarJugador();
 }
 function dibujarsuelo() {
     ctx.fillStyle = 'green';
-    ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
+    ctx.fillRect(0, canvas.height - ALTURASUELO, canvas.width, 20);
 }
 function dibujarJugador() {
-    jugador.x = Math.max(0, Math.min(canvas.width - jugador.width, jugador.x));
     ctx.fillStyle = 'blue';
-    ctx.fillRect(canvas.width  / 2, canvas.height - (20+60), 40, 60);
+    ctx.fillRect(canvas.width  / 2, canvas.height - (ALTURASUELO+ALTURAPERSONAJE), ANCHOPERSONAJE, ALTURAPERSONAJE);
 }
 let puntaje = 0;
 let limones = [];
 let jugador = {
-  x: canvas.width / 2 - 25,
-  y: canvas.height - 50,
-  width: 50,
-  height: 50
+  x: canvas.width / 2 - ANCHOPERSONAJE / 2,
+  y: canvas.height - ALTURASUELO - ALTURAPERSONAJE,
+  width: ANCHOPERSONAJE,
+  height: ALTURAPERSONAJE
 };
