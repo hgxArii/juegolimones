@@ -13,6 +13,7 @@ function iniciarJuego() {
     dibujarsuelo();
     dibujarPersonaje();
     dibujarLimon();
+    aparecerLimon();
 }
 function dibujarsuelo() {
     ctx.fillStyle = "green";
@@ -26,13 +27,13 @@ function moverIzquierda() {
     personajeX=personajeX-10;
     limpiarCanvas();
     actualizarPantalla();
-    detectarColision();
+    
     }
 function moverDerecha() {
     personajeX=personajeX+10;
     limpiarCanvas();
     actualizarPantalla();
-    detectarColision();
+   
 }
 function actualizarPantalla() {
     limpiarCanvas();
@@ -52,6 +53,7 @@ function bajarlimon() {
     limonY = limonY + 10;
     dibujarLimon();
     actualizarPantalla();
+    detectarColision();
  }   
  function detectarColision() {
     if (limonY == personajeX && limonY == personajeY)
@@ -61,10 +63,22 @@ function bajarlimon() {
     }
 function detectarColision() {
     if (limonY + ALTOLIMON >= personajeY && limonX + ANCHOLIMON >= personajeX && limonX <= personajeX + ANCHOPERSONAJE) {
-        alert("¡Has atrapado el limón!");
-        reiniciarJuego();
+       // alert("¡Has atrapado el limón!");
+        aparecerLimon();
     }
      }
+function probarAleatorio() {
+    let max = canvas.width - ANCHOLIMON;
+    let min = 0;
+    let aleatorio = generarAleatorio(min, max);
+    console.log(aleatorio);
+    }
+function aparecerLimon() {
+    limonX = generarAleatorio(0, canvas.width - ANCHOLIMON);
+    limonY = 0;
+    dibujarLimon();
+    actualizarPantalla();
+}
 let puntaje = 0;
 let limones = [];
 let jugador = {
