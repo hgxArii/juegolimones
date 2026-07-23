@@ -5,15 +5,27 @@ const ALTURAPERSONAJE = 60;
 const ANCHOPERSONAJE = 40;
 const ANCHOLIMON = 20;
 const ALTOLIMON = 20;
+
 let personajeX=canvas.width/2;
 let personajeY=canvas.height-(ALTURASUELO + ALTURAPERSONAJE);
 let limonX=canvas.width/2;
 let limonY=5;
+let puntaje = 0;
+let vidas = 3;
+let velocidadLimon = 200;
+let intervalo;
+
+
 function iniciarJuego() {
+
+    clearInterval(intervalo);
+
+    limpiarCanvas();
     dibujarsuelo();
     dibujarPersonaje();
-    dibujarLimon();
     aparecerLimon();
+
+    intervalo = setInterval(bajarlimon, velocidadLimon);
 }
 function dibujarsuelo() {
     ctx.fillStyle = "green";
@@ -54,36 +66,84 @@ function bajarlimon() {
     dibujarLimon();
     actualizarPantalla();
     detectarColision();
- }   
- function detectarColision() {
-    if (limonY == personajeX && limonY == personajeY)
-    {
-     alert("¡Has atrapado el limón!");   
-    }
-    }
+    detectarPiso();
+ }  
+function generarAleatorio(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 function detectarColision() {
-    if (limonY + ALTOLIMON >= personajeY && limonX + ANCHOLIMON >= personajeX && limonX <= personajeX + ANCHOPERSONAJE) {
-       // alert("¡Has atrapado el limón!");
+
+    if (
+        limonX + ANCHOLIMON > personajeX &&
+        limonX < personajeX + ANCHOPERSONAJE &&
+        limonY + ALTOLIMON > personajeY &&
+        limonY < personajeY + ALTURAPERSONAJE
+    ) {
+
+        puntaje++;
+        document.getElementById("txtPuntaje").textContent = puntaje;
+
         aparecerLimon();
+
+        if (puntaje == 3) {
+            velocidadLimon = 150;
+            clearInterval(intervalo);
+            intervalo = setInterval(bajarlimon, velocidadLimon);
+        }
+
+        if (puntaje == 6) {
+            velocidadLimon = 100;
+            clearInterval(intervalo);
+            intervalo = setInterval(bajarlimon, velocidadLimon);
+        }
+
+        if (puntaje == 10) {
+            clearInterval(intervalo);
+            alert("¡TIENES LOS LIMONES, AHORA SOLO FALTA SAL Y TEQUILA! 🍋");
+        }
     }
-     }
-function probarAleatorio() {
-    let max = canvas.width - ANCHOLIMON;
-    let min = 0;
-    let aleatorio = generarAleatorio(min, max);
-    console.log(aleatorio);
-    }
+}
 function aparecerLimon() {
     limonX = generarAleatorio(0, canvas.width - ANCHOLIMON);
     limonY = 0;
     dibujarLimon();
     actualizarPantalla();
 }
-let puntaje = 0;
-let limones = [];
-let jugador = {
-  x: canvas.width / 2 - ANCHOPERSONAJE / 2,
-  y: canvas.height - ALTURASUELO - ALTURAPERSONAJE,
-  width: ANCHOPERSONAJE,
-  height: ALTURAPERSONAJE
-};
+function detectarPiso() {
+
+    if (limonY + ALTOLIMON >= canvas.height - ALTURASUELO) {
+
+        vidas--;
+        document.getElementById("txtVidas").textContent = vidas;
+
+        if (vidas <= 0) {
+            vidas = 0;
+            document.getElementById("txtVidas").textContent = vidas;
+            clearInterval(intervalo);
+            alert("GAME OVER");
+            return;
+        }
+
+        aparecerLimon();
+    }
+}
+
+function reiniciar() {
+
+    clearInterval(intervalo);
+
+    puntaje = 0;
+    vidas = 3;
+    velocidadLimon = 200;
+
+    personajeX = canvas.width / 2;
+    personajeY = canvas.height - (ALTURASUELO + ALTURAPERSONAJE);
+
+    limonX = canvas.width / 2;
+    limonY = 0;
+
+    document.getElementById("txtPuntaje").textContent = puntaje;
+    document.getElementById("txtVidas").textContent = vidas;
+
+    iniciarJuego();
+}
